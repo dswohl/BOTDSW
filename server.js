@@ -41,7 +41,11 @@ client.on('message', async (message) => {
 });
 
 app.get('/qr', (req, res) => {
-    res.send(qrCodeData);
+    if (!qrCodeData) {
+        res.status(404).send('QR Code not ready');
+        return;
+    }
+    res.send(`<html><body><img src="${qrCodeData}"></body></html>`);
 });
 
 const PORT = process.env.PORT || 3000;
