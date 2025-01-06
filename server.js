@@ -36,7 +36,7 @@ client.on('message', async (msg) => {
         } else if (text.includes('ubicacion') || text.includes('direccion')) {
             await msg.reply('Estamos ubicados en Avenida Federico Lacroze 2827 6C - CABA');
         } else if (text.includes('gracias')) {
-            await msg.reply('¡Gracias a ti! Estamos para servirte.');
+            await msg.reply('¡Gracias a vos.');
         }
         console.log('Respuesta enviada');
     } catch (err) {
