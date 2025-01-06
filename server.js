@@ -1,56 +1,45 @@
 const express = require('express');
-const cors = require('cors');
-const { Client, LocalAuth } = require('whatsapp-web.js');
+const { Client } = require('whatsapp-web.js');
 const qrcode = require('qrcode');
 
 const app = express();
-app.use(cors());
-app.use(express.json());
+const port = process.env.PORT || 10000;
 
 const client = new Client({
-    authStrategy: new LocalAuth(),
     puppeteer: {
         args: ['--no-sandbox', '--disable-setuid-sandbox']
     }
 });
 
-let qrCodeData = '';
+let qrString = '';
 
-client.on('qr', async (qr) => {
+client.on('qr', (qr) => {
     console.log('QR Code received');
-    qrCodeData = await qrcode.toDataURL(qr);
+    qrString = qr;
+});
+
+app.get('/qr', async (req, res) => {
+    try {
+        if (!qrString) {
+            return res.status(404).send('QR not ready');
+        }
+        const qrImage = await qrcode.toDataURL(qrString);
+        res.send(`<html><body><img src="${qrImage}"></body></html>`);
+    } catch (error) {
+        res.status(500).send('Error generating QR');
+    }
 });
 
 client.on('ready', () => {
-    console.log('Client is ready!');
+    console.log('Client ready');
 });
 
-client.on('message', async (message) => {
-    const messageContent = message.body.toLowerCase();
-
-    // Respuestas automáticas básicas
-    if (messageContent.includes('hola')) {
-        await message.reply('¡Hola! Gracias por contactarnos. ¿En qué podemos ayudarte?');
-    } else if (messageContent.includes('horario')) {
-        await message.reply('Nuestro horario de atención es de Lunes a Viernes de 9:00 AM a 6:00 PM');
-    } else if (messageContent.includes('ubicacion') || messageContent.includes('direccion')) {
-        await message.reply('Estamos ubicados en [Tu dirección aquí]');
-    } else if (messageContent.includes('gracias')) {
-        await message.reply('¡Gracias a ti! Estamos para servirte.');
+client.on('message', msg => {
+    const text = msg.body.toLowerCase();
+    if (text.includes('hola')) {
+        msg.reply('¡Hola! ¿En qué puedo ayudarte?');
     }
 });
 
-app.get('/qr', (req, res) => {
-    if (!qrCodeData) {
-        res.status(404).send('QR Code not ready');
-        return;
-    }
-    res.send(`<html><body><img src="${qrCodeData}"></body></html>`);
-});
-
-const PORT = process.env.PORT || 3000;
 client.initialize();
-
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+app.listen(port, () => console.log(`Server running on port ${port}`));
