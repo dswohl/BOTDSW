@@ -1,0 +1,20 @@
+{
+  "name": "botdsw",
+  "version": "1.0.0",
+  "description": "Bot de WhatsApp para respuestas automáticas",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "whatsapp-web.js": "^1.19.5",
+    "qrcode": "^1.5.3",
+    "dotenv": "^16.0.3"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
