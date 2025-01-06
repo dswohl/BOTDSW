@@ -9,28 +9,28 @@ const client = new Client({
     puppeteer: {
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
         headless: true
-    },
-    authStrategy: new LocalAuth()
+    }
 });
 
 let qrString = '';
 
 client.on('qr', (qr) => {
     qrString = qr;
-    console.log('Nuevo QR generado');
+    console.log('QR Code received:', qr);
 });
 
 app.get('/qr', async (req, res) => {
-    if (!qrString) {
-        return res.status(404).send('QR no disponible aún');
+    try {
+        if (!qrString) {
+            client.initialize();
+            return res.send('<html><body>Generando QR... Refresca en 5 segundos</body></html>');
+        }
+        const qrImage = await qrcode.toDataURL(qrString);
+        res.send(`<html><body><img src="${qrImage}"><br><button onclick="location.reload()">Refrescar QR</button></body></html>`);
+    } catch (error) {
+        res.status(500).send('Error: ' + error.message);
     }
-    const qrImage = await qrcode.toDataURL(qrString);
-    res.send(`<html><body><img src="${qrImage}"></body></html>`);
-});
-
-client.on('ready', () => {
-    console.log('Cliente listo');
 });
 
 client.initialize();
-app.listen(port, () => console.log(`Servidor iniciado en puerto ${port}`));
+app.listen(port, () => console.log(`Server on port ${port}`));
