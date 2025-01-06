@@ -19,10 +19,23 @@ client.on('qr', (qr) => {
     console.log('QR Code received:', qr);
 });
 
+client.on('message', async (message) => {
+    const text = message.body.toLowerCase();
+    
+    if (text.includes('hola')) {
+        await message.reply('¡Hola! Gracias por contactarnos. ¿En qué puedo ayudarte?');
+    } else if (text.includes('horario')) {
+        await message.reply('Nuestro horario de atención es de Lunes a Viernes de 10:30 AM a 16:30 ');
+    } else if (text.includes('ubicacion') || text.includes('direccion')) {
+        await message.reply('Estamos ubicados en Av. Federico LAcroze 2827 6C - CABA');
+    } else if (text.includes('gracias')) {
+        await message.reply('¡Gracias a ti! Estamos para servirte.');
+    }
+});
+
 app.get('/qr', async (req, res) => {
     try {
         if (!qrString) {
-            client.initialize();
             return res.send('<html><body>Generando QR... Refresca en 5 segundos</body></html>');
         }
         const qrImage = await qrcode.toDataURL(qrString);
