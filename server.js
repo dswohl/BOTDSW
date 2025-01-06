@@ -32,9 +32,9 @@ client.on('message', async (msg) => {
         if (text.includes('hola')) {
             await msg.reply('¡Hola! Gracias por contactarnos. ¿En qué puedo ayudarte?');
         } else if (text.includes('horario')) {
-            await msg.reply('Nuestro horario de atención es de Lunes a Viernes de 9:00 AM a 6:00 PM');
+            await msg.reply('Nuestro horario de atención es de Lunes a Viernes de 10:30 a 16:30hs.');
         } else if (text.includes('ubicacion') || text.includes('direccion')) {
-            await msg.reply('Estamos ubicados en [Tu dirección aquí]');
+            await msg.reply('Estamos ubicados en Avenida Federico Lacroze 2827 6C - CABA');
         } else if (text.includes('gracias')) {
             await msg.reply('¡Gracias a ti! Estamos para servirte.');
         }
