@@ -24,22 +24,25 @@ client.on('qr', (qr) => {
     console.log('QR Code received');
 });
 
-client.on('ready', () => {
-    console.log('Client is ready!');
-});
-
 client.on('message', async (msg) => {
+    if (msg.fromMe) return; // Ignora mensajes propios
+    
     const text = msg.body.toLowerCase();
+    console.log('Mensaje recibido:', text); // Para debug
+    
     try {
         const responses = JSON.parse(fs.readFileSync('responses.json', 'utf8'));
+        console.log('Respuestas cargadas:', responses); // Para debug
+        
         for (const [keyword, response] of Object.entries(responses)) {
             if (text.includes(keyword)) {
+                console.log('Coincidencia encontrada:', keyword); // Para debug
                 await msg.reply(response);
                 break;
             }
         }
     } catch (err) {
-        console.error('Error:', err);
+        console.error('Error completo:', err);
     }
 });
 
