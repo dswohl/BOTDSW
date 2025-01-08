@@ -1,1 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Panel de Administración - Bot WhatsApp</title>
+    <style>
+        body { 
+            font-family: Arial; 
+            margin: 20px; 
+            background-color: #f5f5f5;
+        }
+        .response-item {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            background-color: white;
+            border-radius: 5px;
+        }
+        .button {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        textarea {
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Panel de Administración - Bot WhatsApp</h1>
+    <div id="responses"></div>
+    <button onclick="addNew()" class="button">Añadir Nueva Respuesta</button>
+    <button onclick="saveAll()" class="button">Guardar Cambios</button>
 
+    <script>
+        let responses = {};
+
+        async function loadResponses() {
+            const res = await fetch('/api/responses');
+            responses = await res.json();
+            displayResponses();
+        }
+
+        function displayResponses() {
+            const container = document.getElementById('responses');
+            container.innerHTML = '';
+            
+            Object.entries(responses).forEach(([keyword, response]) => {
+                container.innerHTML += `
+                    <div class="response-item">
+                        <p>Palabra clave: <input value="${keyword}" onchange="updateKeyword('${keyword}', this.value)"></p>
+                        <p>Respuesta: <textarea onchange="updateResponse('${keyword}', this.value)">${response}</textarea></p>
+                        <button onclick="deleteResponse('${keyword}')" style="background: #f44336" class="button">Eliminar</button>
+                    </div>
+                `;
+            });
+        }
+
+        function addNew() {
+            const keyword = prompt('Ingresa la palabra clave:');
+            if (keyword) {
+                responses[keyword] = '';
+                displayResponses();
+            }
+        }
+
+        async function saveAll() {
+            const res = await fetch('/api/responses', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(responses)
+            });
+            alert('Cambios guardados');
+        }
+
+        function updateKeyword(oldKey, newKey) {
+            responses[newKey] = responses[oldKey];
+            delete responses[oldKey];
+        }
+
+        function updateResponse(key, value) {
+            responses[key] = value;
+        }
+
+        function deleteResponse(key) {
+            delete responses[key];
+            displayResponses();
+        }
+
+        loadResponses();
+    </script>
+</body>
+</html>
