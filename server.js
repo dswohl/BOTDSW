@@ -24,6 +24,10 @@ client.on('qr', (qr) => {
     console.log('QR Code received');
 });
 
+client.on('ready', () => {
+    console.log('Client is ready!');
+});
+
 client.on('message', async (msg) => {
     if (msg.fromMe) return; // Ignora mensajes propios
     
@@ -46,12 +50,15 @@ client.on('message', async (msg) => {
     }
 });
 
-// Ruta para el panel de administración
+client.on('disconnected', () => {
+    console.log('Client disconnected');
+    client.initialize();
+});
+
 app.get('/admin', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'admin.html'));
 });
 
-// Ruta para obtener respuestas
 app.get('/api/responses', (req, res) => {
     try {
         const responses = JSON.parse(fs.readFileSync('responses.json', 'utf8'));
@@ -61,7 +68,6 @@ app.get('/api/responses', (req, res) => {
     }
 });
 
-// Ruta para guardar respuestas
 app.post('/api/responses', (req, res) => {
     try {
         fs.writeFileSync('responses.json', JSON.stringify(req.body, null, 2));
