@@ -12,7 +12,8 @@
     "cors": "^2.8.5",
     "whatsapp-web.js": "^1.19.5",
     "qrcode": "^1.5.3",
-    "dotenv": "^16.0.3"
+    "dotenv": "^16.0.3",
+    "@octokit/rest": "^18.12.0"
   },
   "engines": {
     "node": ">=14.0.0"
