@@ -10,7 +10,7 @@ const app = express();
 app.use(express.json());
 app.use(express.static('public'));
 
-const port = process.env.PORT || 10000;
+const port = process.env.PORT || 3000;
 
 const client = new Client({
    puppeteer: {
@@ -100,4 +100,21 @@ app.post('/api/responses', async (req, res) => {
        console.error('Error completo:', err);
        res.status(500).json({ error: 'Error al guardar respuestas' });
    }
+});
+
+app.get('/qr', async (req, res) => {
+   try {
+       if (!qrString) {
+           return res.send('Generando QR...');
+       }
+       const qrImage = await qrcode.toDataURL(qrString);
+       res.send(`<html><body><img src="${qrImage}"></body></html>`);
+   } catch (error) {
+       res.status(500).send('Error: ' + error.message);
+   }
+});
+
+client.initialize();
+app.listen(port, '0.0.0.0', () => {
+   console.log(`Server running on port ${port}`);
 });
