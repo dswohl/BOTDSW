@@ -82,12 +82,18 @@ client.on('message', async (msg) => {
         const responses = JSON.parse(fs.readFileSync('responses.json', 'utf8'));
         console.log('Respuestas cargadas:', responses);
         
+        let foundMatch = false;
         for (const [keyword, response] of Object.entries(responses)) {
-            if (text.includes(keyword)) {
-                console.log('Coincidencia encontrada:', keyword);
+            if (keyword !== 'default' && text.includes(keyword)) {
                 await msg.reply(response);
+                foundMatch = true;
                 break;
             }
+        }
+        
+        // Si no se encontró coincidencia, usar respuesta por defecto
+        if (!foundMatch && responses.default) {
+            await msg.reply(responses.default);
         }
     } catch (err) {
         console.error('Error:', err);
