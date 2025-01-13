@@ -83,8 +83,12 @@ client.on('message', async (msg) => {
         console.log('Respuestas cargadas:', responses);
         
         let foundMatch = false;
-        for (const [keyword, response] of Object.entries(responses)) {
-            if (keyword !== 'default' && text.includes(keyword)) {
+        for (const [keywords, response] of Object.entries(responses)) {
+            // Dividir las palabras clave por coma y limpiar espacios
+            const keywordArray = keywords.toLowerCase().split(',').map(k => k.trim());
+            
+            // Verificar si alguna de las palabras clave coincide
+            if (keywordArray.some(keyword => text.includes(keyword))) {
                 await msg.reply(response);
                 foundMatch = true;
                 break;
