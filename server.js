@@ -121,8 +121,13 @@ app.get('/api/responses', (req, res) => {
 app.post('/api/responses', async (req, res) => {
     try {
         console.log('Recibida solicitud para actualizar respuestas');
+        // Formatear el JSON correctamente antes de guardar
+        const formattedJson = JSON.stringify(req.body, null, 2);
+        // Verificar que el JSON es válido antes de guardar
+        JSON.parse(formattedJson); // Esto lanzará error si el JSON no es válido
+        
         // Guardar localmente
-        fs.writeFileSync('responses.json', JSON.stringify(req.body, null, 2));
+        fs.writeFileSync('responses.json', formattedJson);
         console.log('Archivo guardado localmente');
 
         // Actualizar en GitHub
