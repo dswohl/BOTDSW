@@ -2,6 +2,6 @@
   "hola": "¡Hola! Gracias por contactarnos. ¿En qué puedo ayudarte? Podes ingresar a https://www.premiumshop.com.ar para ver nuestros productos.",
   "gracias": "¡Gracias a ti! Estamos para servirte.",
   "default": "Hola. Muchas gracias por contactarte en breve te estaremos respondiendo. Podes ingresar a https://www.premiumshop.com.ar para ver nuestros productos.",
-  "ubicacion": "Estamos ubicados en Av. Federico Lacroze 2827 6C - CABA",
-  "horario, dia, hora": "Nuestro horario de atención es de Lunes a Viernes de 10:30 a 16:30Hs. "
+  "horario, dia, hora": "Nuestro horario de atención es de Lunes a Viernes de 10:30 a 16:30Hs. ",
+  "ubicacion,direccion,domicilio": "Estamos ubicados en Av. Federico Lacroze 2827 6C - CABA"
 }
