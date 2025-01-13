@@ -1,15 +1,7 @@
 {
-  "hola": "¡Hola! Gracias por contactarnos. ¿En qué puedo ayudarte?",
-  "horario": "Nuestro horario de atención es de Lunes a Viernes de 9:00 AM a 6:00 PM",
-  "ubicacion": "Estamos ubicados en [Tu dirección aquí]",
-  "direccion": "Estamos ubicados en [Tu dirección aquí]",
+  "hola": "¡Hola! Gracias por contactarnos. ¿En qué puedo ayudarte? Podes ingresar a https://www.premiumshop.com.ar para ver nuestros productos.",
   "gracias": "¡Gracias a ti! Estamos para servirte.",
-  "prueba222": "prueba222 respuesta",
-  "dswohl": "dswohl respuesta",
-  "prueba333": "Prueba333 respuesta",
-  "prueba444": "prueba444",
-  "prueba555": "respuesta555",
-  "default": "No encontré una respuesta específica para tu consulta. ¿Podrías reformular tu pregunta?",
-  "prueba666": "respuesta666",
-  "prueba777": "respuesta777"
+  "default": "Hola. Muchas gracias por contactarte en breve te estaremos respondiendo. Podes ingresar a https://www.premiumshop.com.ar para ver nuestros productos.",
+  "ubicacion": "Estamos ubicados en Av. Federico Lacroze 2827 6C - CABA",
+  "horario, dia, hora": "Nuestro horario de atención es de Lunes a Viernes de 10:30 a 16:30Hs. "
 }
