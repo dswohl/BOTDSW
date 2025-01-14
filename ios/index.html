@@ -1,1 +1,103 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Bot Manager">
+    <title>Bot Manager</title>
+    <style>
+        :root {
+            --system-blue: rgb(0, 122, 255);
+            --system-gray: rgb(142, 142, 147);
+            --system-background: rgb(242, 242, 247);
+        }
 
+        body {
+            margin: 0;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons";
+            background-color: var(--system-background);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .navigation-bar {
+            padding: 12px 16px;
+            background-color: var(--system-background);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navigation-title {
+            font-size: 17px;
+            font-weight: 600;
+            line-height: 22px;
+            text-align: center;
+            color: black;
+            margin: 0;
+        }
+
+        .list {
+            margin: 16px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .list-item {
+            display: flex;
+            align-items: center;
+            padding: 11px 16px;
+            background-color: white;
+            border-bottom: 0.5px solid rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .list-item-icon {
+            margin-right: 12px;
+            width: 29px;
+            height: 29px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .list-item-text {
+            flex: 1;
+            font-size: 17px;
+            line-height: 22px;
+            color: var(--system-blue);
+        }
+
+        .list-item-chevron {
+            color: var(--system-gray);
+            font-size: 17px;
+        }
+    </style>
+    <link rel="apple-touch-icon" href="icons/icon-180.png">
+</head>
+<body>
+    <nav class="navigation-bar">
+        <h1 class="navigation-title">Bot Manager</h1>
+    </nav>
+
+    <div class="list">
+        <a href="../admin" class="list-item">
+            <span class="list-item-icon">⚙️</span>
+            <span class="list-item-text">Administración</span>
+            <span class="list-item-chevron">›</span>
+        </a>
+        <a href="../qr" class="list-item">
+            <span class="list-item-icon">📱</span>
+            <span class="list-item-text">Código QR</span>
+            <span class="list-item-chevron">›</span>
+        </a>
+    </div>
+</body>
+</html>
