@@ -2,77 +2,129 @@
 <html lang="es-ES">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Bot Manager">
     <title>Bot Manager</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.2/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/umd/react-dom.production.min.js"></script>
     <style>
-        /* Variables iOS */
+        /* Variables del Sistema iOS */
         :root {
-            --system-background: #F2F2F7;
-            --system-grouped-background: #FFFFFF;
             --system-blue: #007AFF;
-            --system-gray: #8E8E93;
-            --system-separator: rgba(60, 60, 67, 0.29);
-            --system-inset-padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+            --system-gray2: #AEAEB2;
+            --system-gray5: #E5E5EA;
+            --system-gray6: #F2F2F7;
+            --system-background: #FFFFFF;
+            --system-grouped-background: #F2F2F7;
+            --nav-bar-blur: saturate(180%) blur(20px);
         }
 
-        /* Estilos Base iOS */
-        body {
+        /* Reseteo y Base */
+        * {
             margin: 0;
             padding: 0;
-            background-color: var(--system-background);
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text";
-            -webkit-font-smoothing: antialiased;
-            -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
         }
 
-        /* Barra de Estado */
-        .status-bar {
-            height: 44px;
-            background-color: var(--system-background);
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons";
+            background-color: var(--system-grouped-background);
+            -webkit-font-smoothing: antialiased;
+            -webkit-tap-highlight-color: transparent;
+            padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+            user-select: none;
+        }
+
+        /* Barra de Navegación iOS */
+        .nav-bar {
             position: sticky;
             top: 0;
             z-index: 100;
+            backdrop-filter: var(--nav-bar-blur);
+            -webkit-backdrop-filter: var(--nav-bar-blur);
+            background-color: rgba(255, 255, 255, 0.85);
+            border-bottom: 0.5px solid var(--system-gray5);
         }
 
-        /* Título */
-        .page-title {
-            text-align: center;
+        .nav-bar-content {
+            height: 44px;
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-back {
+            display: flex;
+            align-items: center;
+            color: var(--system-blue);
+            font-size: 17px;
+            text-decoration: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .nav-title {
             font-size: 17px;
             font-weight: 600;
-            line-height: 22px;
-            padding: 12px 16px;
-            margin: 0;
             color: #000;
-            background-color: var(--system-background);
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .nav-right {
+            color: var(--system-blue);
+            font-size: 24px;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-tap-highlight-color: transparent;
         }
 
         /* Lista iOS */
-        .ios-list {
-            margin: 20px 16px;
-            background: var(--system-grouped-background);
+        .list-section {
+            margin: 35px 16px;
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            background: var(--system-background);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.07);
         }
 
-        .ios-list-item {
+        .list-header {
+            padding: 0 16px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--system-gray2);
+            text-transform: uppercase;
+        }
+
+        .list-item {
             display: flex;
             align-items: center;
+            min-height: 44px;
             padding: 11px 16px;
             text-decoration: none;
+            -webkit-tap-highlight-color: transparent;
             position: relative;
-            -webkit-tap-highlight-color: rgba(0,0,0,0);
-            background: var(--system-grouped-background);
+            background: var(--system-background);
         }
 
-        .ios-list-item:not(:last-child) {
-            border-bottom: 0.5px solid var(--system-separator);
+        .list-item:not(:last-child)::after {
+            content: "";
+            position: absolute;
+            left: 16px;
+            right: 0;
+            bottom: 0;
+            height: 0.5px;
+            background-color: var(--system-gray5);
         }
 
-        .ios-list-icon {
+        .list-item-icon {
             width: 29px;
             height: 29px;
             margin-right: 12px;
@@ -82,39 +134,348 @@
             font-size: 22px;
         }
 
-        .ios-list-label {
+        .list-item-content {
             flex: 1;
+            min-height: 22px;
+        }
+
+        .list-item-title {
             font-size: 17px;
             color: var(--system-blue);
+            line-height: 22px;
         }
 
-        .ios-chevron {
-            color: var(--system-gray);
-            font-size: 14px;
+        .list-item-subtitle {
+            font-size: 15px;
+            color: var(--system-gray2);
+            margin-top: 4px;
+        }
+
+        .list-item-chevron {
             margin-left: 8px;
+            color: var(--system-gray2);
+            font-size: 14px;
         }
 
-        .ios-list-item:active {
-            background-color: rgba(0,0,0,0.04);
+        /* Formulario iOS */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--system-gray2);
+            margin-bottom: 8px;
+            padding: 0 16px;
+        }
+
+        .form-input, .form-textarea {
+            width: 100%;
+            border: none;
+            background: var(--system-background);
+            padding: 12px 16px;
+            font-size: 17px;
+            line-height: 22px;
+            color: #000;
+            resize: none;
+        }
+
+        .form-textarea {
+            min-height: 100px;
+        }
+
+        /* Botones iOS */
+        .ios-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 24px;
+            background: var(--system-blue);
+            color: white;
+            border-radius: 10px;
+            font-size: 17px;
+            font-weight: 600;
+            text-decoration: none;
+            margin: 16px;
+            width: calc(100% - 32px);
+            border: none;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .ios-button:active {
+            opacity: 0.8;
+        }
+
+        /* Utilidades */
+        .hidden {
+            display: none;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-button {
+            color: var(--system-blue);
+            background: none;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+            font-size: 17px;
+        }
+
+        .action-button.delete {
+            color: #FF3B30;
         }
     </style>
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>💬</text></svg>">
 </head>
 <body>
-    <div class="status-bar"></div>
-    <h1 class="page-title">Bot Manager</h1>
+    <div id="app">
+        <!-- Pantalla Principal -->
+        <div id="home-screen">
+            <div class="nav-bar">
+                <div class="nav-bar-content">
+                    <div style="width: 44px"></div>
+                    <h1 class="nav-title">Bot Manager</h1>
+                    <div style="width: 44px"></div>
+                </div>
+            </div>
 
-    <div class="ios-list">
-        <a href="/admin" class="ios-list-item">
-            <div class="ios-list-icon">⚙️</div>
-            <div class="ios-list-label">Administración</div>
-            <div class="ios-chevron">›</div>
-        </a>
-        <a href="/qr" class="ios-list-item">
-            <div class="ios-list-icon">📱</div>
-            <div class="ios-list-label">Código QR</div>
-            <div class="ios-chevron">›</div>
-        </a>
+            <div class="list-section">
+                <a href="#admin" class="list-item" onclick="showScreen('admin')">
+                    <div class="list-item-icon">⚙️</div>
+                    <div class="list-item-content">
+                        <div class="list-item-title">Administración</div>
+                    </div>
+                    <div class="list-item-chevron">›</div>
+                </a>
+                <a href="#qr" class="list-item" onclick="showScreen('qr')">
+                    <div class="list-item-icon">📱</div>
+                    <div class="list-item-content">
+                        <div class="list-item-title">Código QR</div>
+                    </div>
+                    <div class="list-item-chevron">›</div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Pantalla Admin -->
+        <div id="admin-screen" class="hidden">
+            <div class="nav-bar">
+                <div class="nav-bar-content">
+                    <a href="#" class="nav-back" onclick="showScreen('home')">
+                        ‹ Atrás
+                    </a>
+                    <h1 class="nav-title">Administración</h1>
+                    <button class="nav-right" onclick="toggleAddForm()">+</button>
+                </div>
+            </div>
+
+            <div id="add-form" class="hidden">
+                <div class="list-section">
+                    <div class="form-group">
+                        <div class="form-label">PALABRA CLAVE</div>
+                        <input type="text" id="keyword-input" class="form-input" placeholder="Ejemplo: horario,hora,tiempo">
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label">RESPUESTA</div>
+                        <textarea id="response-input" class="form-textarea" placeholder="Escribe la respuesta automática"></textarea>
+                    </div>
+                </div>
+                <button class="ios-button" onclick="saveResponse()">
+                    Guardar
+                </button>
+            </div>
+
+            <div class="list-section" id="responses-list">
+                <div class="list-header">RESPUESTAS EXISTENTES</div>
+                <!-- Las respuestas se cargarán aquí -->
+            </div>
+        </div>
+
+        <!-- Pantalla QR -->
+        <div id="qr-screen" class="hidden">
+            <div class="nav-bar">
+                <div class="nav-bar-content">
+                    <a href="#" class="nav-back" onclick="showScreen('home')">
+                        ‹ Atrás
+                    </a>
+                    <h1 class="nav-title">Código QR</h1>
+                    <div style="width: 44px"></div>
+                </div>
+            </div>
+
+            <div class="list-section" style="text-align: center; padding: 20px;">
+                <div id="qr-container" style="margin-bottom: 16px;">
+                    <!-- El código QR se cargará aquí -->
+                </div>
+                <p style="color: var(--system-gray2); font-size: 13px;">
+                    Escanea este código con WhatsApp para vincular el dispositivo
+                </p>
+            </div>
+        </div>
     </div>
+
+    <script>
+        // Gestión de pantallas
+        function showScreen(screenId) {
+            document.getElementById('home-screen').classList.add('hidden');
+            document.getElementById('admin-screen').classList.add('hidden');
+            document.getElementById('qr-screen').classList.add('hidden');
+            document.getElementById(screenId + '-screen').classList.remove('hidden');
+
+            if (screenId === 'admin') {
+                loadResponses();
+            } else if (screenId === 'qr') {
+                loadQR();
+            }
+        }
+
+        // Gestión del formulario
+        function toggleAddForm() {
+            const form = document.getElementById('add-form');
+            form.classList.toggle('hidden');
+        }
+
+        // Cargar respuestas
+        async function loadResponses() {
+            try {
+                const response = await fetch('/api/responses');
+                const data = await response.json();
+                const container = document.getElementById('responses-list');
+                container.innerHTML = '<div class="list-header">RESPUESTAS EXISTENTES</div>';
+
+                for (const [keyword, resp] of Object.entries(data)) {
+                    if (keyword === 'default') continue;
+                    const item = document.createElement('div');
+                    item.className = 'list-item';
+                    item.innerHTML = `
+                        <div class="list-item-content">
+                            <div class="list-item-title">${keyword}</div>
+                            <div class="list-item-subtitle">${resp}</div>
+                        </div>
+                        <div class="actions">
+                            <button class="action-button" onclick="editResponse('${keyword}')">✎</button>
+                            <button class="action-button delete" onclick="deleteResponse('${keyword}')">🗑</button>
+                        </div>
+                    `;
+                    container.appendChild(item);
+                }
+            } catch (error) {
+                console.error('Error cargando respuestas:', error);
+            }
+        }
+
+        // Guardar respuesta
+        async function saveResponse() {
+            const keyword = document.getElementById('keyword-input').value;
+            const response = document.getElementById('response-input').value;
+
+            if (!keyword || !response) {
+                alert('Por favor completa todos los campos');
+                return;
+            }
+
+            try {
+                const currentResponses = await (await fetch('/api/responses')).json();
+                currentResponses[keyword] = response;
+
+                const saveResponse = await fetch('/api/responses', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(currentResponses)
+                });
+
+                if (saveResponse.ok) {
+                    document.getElementById('keyword-input').value = '';
+                    document.getElementById('response-input').value = '';
+                    toggleAddForm();
+                    loadResponses();
+                }
+            } catch (error) {
+                console.error('Error guardando respuesta:', error);
+            }
+        }
+
+        // Editar respuesta
+        async function editResponse(keyword) {
+            const responses = await (await fetch('/api/responses')).json();
+            document.getElementById('keyword-input').value = keyword;
+            document.getElementById('response-input').value = responses[keyword];
+            document.getElementById('add-form').classList.remove('hidden');
+        }
+
+        // Eliminar respuesta
+        async function deleteResponse(keyword) {
+            if (!confirm('¿Estás seguro de querer eliminar esta respuesta?')) return;
+
+            try {
+                const responses = await (await fetch('/api/responses')).json();
+                delete responses[keyword];
+
+                const response = await fetch('/api/responses', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(responses)
+                });
+
+                if (response.ok) {
+                    loadResponses();
+                }
+            } catch (error) {
+                console.error('Error eliminando respuesta:', error);
+            }
+        }
+     
+        // Cargar QR
+        async function loadQR() {
+            try {
+                const response = await fetch('/qr');
+                const html = await response.text();
+                const container = document.getElementById('qr-container');
+                
+                // Extraer la imagen del QR del HTML
+                const match = html.match(/<img src="([^"]+)"/);
+                if (match) {
+                    const img = document.createElement('img');
+                    img.src = match[1];
+                    img.style.maxWidth = '100%';
+                    img.style.height = 'auto';
+                    container.innerHTML = '';
+                    container.appendChild(img);
+                } else {
+                    container.innerHTML = 'Generando código QR...';
+                }
+            } catch (error) {
+                console.error('Error cargando QR:', error);
+                document.getElementById('qr-container').innerHTML = 'Error al cargar el código QR';
+            }
+        }
+
+        // Inicializar
+        function init() {
+            const hash = window.location.hash.slice(1);
+            if (hash) {
+                showScreen(hash);
+            }
+        }
+
+        // Manejar navegación
+        window.addEventListener('hashchange', () => {
+            const hash = window.location.hash.slice(1);
+            if (hash) {
+                showScreen(hash);
+            } else {
+                showScreen('home');
+            }
+        });
+
+        // Iniciar aplicación
+        init();
+    </script>
 </body>
 </html>
