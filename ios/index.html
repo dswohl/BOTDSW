@@ -7,8 +7,6 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Bot Manager">
     <title>Bot Manager</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.2/umd/react.production.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/umd/react-dom.production.min.js"></script>
     <style>
         /* Variables del Sistema iOS */
         :root {
@@ -83,6 +81,9 @@
             align-items: center;
             justify-content: center;
             -webkit-tap-highlight-color: transparent;
+            background: none;
+            border: none;
+            cursor: pointer;
         }
 
         /* Lista iOS */
@@ -112,6 +113,9 @@
             -webkit-tap-highlight-color: transparent;
             position: relative;
             background: var(--system-background);
+            border: none;
+            width: 100%;
+            text-align: left;
         }
 
         .list-item:not(:last-child)::after {
@@ -149,15 +153,14 @@
             font-size: 15px;
             color: var(--system-gray2);
             margin-top: 4px;
+            word-break: break-word;
         }
 
         .list-item-chevron {
             margin-left: 8px;
             color: var(--system-gray2);
-            font-size: 14px;
         }
-
-        /* Formulario iOS */
+           /* Formulario iOS */
         .form-group {
             margin-bottom: 20px;
         }
@@ -172,7 +175,8 @@
 
         .form-input, .form-textarea {
             width: 100%;
-            border: none;
+            border: 1px solid var(--system-gray5);
+            border-radius: 10px;
             background: var(--system-background);
             padding: 12px 16px;
             font-size: 17px;
@@ -230,6 +234,20 @@
         .action-button.delete {
             color: #FF3B30;
         }
+
+        .error-message {
+            color: #FF3B30;
+            font-size: 13px;
+            margin-top: 4px;
+            padding: 0 16px;
+        }
+
+        .success-message {
+            color: #34C759;
+            font-size: 13px;
+            margin-top: 4px;
+            padding: 0 16px;
+        }
     </style>
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>💬</text></svg>">
 </head>
@@ -246,20 +264,27 @@
             </div>
 
             <div class="list-section">
-                <a href="#admin" class="list-item" onclick="showScreen('admin')">
+                <button class="list-item" onclick="showScreen('admin')">
                     <div class="list-item-icon">⚙️</div>
                     <div class="list-item-content">
                         <div class="list-item-title">Administración</div>
                     </div>
                     <div class="list-item-chevron">›</div>
-                </a>
-                <a href="#qr" class="list-item" onclick="showScreen('qr')">
+                </button>
+                <button class="list-item" onclick="showScreen('qr')">
                     <div class="list-item-icon">📱</div>
                     <div class="list-item-content">
                         <div class="list-item-title">Código QR</div>
                     </div>
                     <div class="list-item-chevron">›</div>
-                </a>
+                </button>
+                <button class="list-item" onclick="showScreen('default')">
+                    <div class="list-item-icon">💬</div>
+                    <div class="list-item-content">
+                        <div class="list-item-title">Respuesta por Defecto</div>
+                    </div>
+                    <div class="list-item-chevron">›</div>
+                </button>
             </div>
         </div>
 
@@ -267,9 +292,9 @@
         <div id="admin-screen" class="hidden">
             <div class="nav-bar">
                 <div class="nav-bar-content">
-                    <a href="#" class="nav-back" onclick="showScreen('home')">
+                    <button onclick="showScreen('home')" class="nav-back">
                         ‹ Atrás
-                    </a>
+                    </button>
                     <h1 class="nav-title">Administración</h1>
                     <button class="nav-right" onclick="toggleAddForm()">+</button>
                 </div>
@@ -278,12 +303,14 @@
             <div id="add-form" class="hidden">
                 <div class="list-section">
                     <div class="form-group">
-                        <div class="form-label">PALABRA CLAVE</div>
-                        <input type="text" id="keyword-input" class="form-input" placeholder="Ejemplo: horario,hora,tiempo">
+                        <label class="form-label">PALABRA CLAVE</label>
+                        <input type="text" id="keyword-input" class="form-input" 
+                               placeholder="Ejemplo: consulta,pregunta,info">
                     </div>
                     <div class="form-group">
-                        <div class="form-label">RESPUESTA</div>
-                        <textarea id="response-input" class="form-textarea" placeholder="Escribe la respuesta automática"></textarea>
+                        <label class="form-label">RESPUESTA</label>
+                        <textarea id="response-input" class="form-textarea" 
+                                  placeholder="Escribe la respuesta automática"></textarea>
                     </div>
                 </div>
                 <button class="ios-button" onclick="saveResponse()">
@@ -291,8 +318,8 @@
                 </button>
             </div>
 
-            <div class="list-section" id="responses-list">
-                <div class="list-header">RESPUESTAS EXISTENTES</div>
+            <div id="responses-list" class="list-section">
+                <div class="list-header">RESPUESTAS CONFIGURADAS</div>
                 <!-- Las respuestas se cargarán aquí -->
             </div>
         </div>
@@ -301,9 +328,9 @@
         <div id="qr-screen" class="hidden">
             <div class="nav-bar">
                 <div class="nav-bar-content">
-                    <a href="#" class="nav-back" onclick="showScreen('home')">
+                    <button onclick="showScreen('home')" class="nav-back">
                         ‹ Atrás
-                    </a>
+                    </button>
                     <h1 class="nav-title">Código QR</h1>
                     <div style="width: 44px"></div>
                 </div>
@@ -318,164 +345,31 @@
                 </p>
             </div>
         </div>
+
+        <!-- Pantalla Respuesta Default -->
+        <div id="default-screen" class="hidden">
+            <div class="nav-bar">
+                <div class="nav-bar-content">
+                    <button onclick="showScreen('home')" class="nav-back">
+                        ‹ Atrás
+                    </button>
+                    <h1 class="nav-title">Respuesta por Defecto</h1>
+                    <div style="width: 44px"></div>
+                </div>
+            </div>
+
+            <div class="list-section">
+                <div class="form-group">
+                    <label class="form-label">RESPUESTA CUANDO NO HAY COINCIDENCIAS</label>
+                    <textarea id="default-response" class="form-textarea" rows="4"></textarea>
+                </div>
+            </div>
+            <button class="ios-button" onclick="saveDefaultResponse()">
+                Guardar Cambios
+            </button>
+        </div>
     </div>
 
-    <script>
-        // Gestión de pantallas
-        function showScreen(screenId) {
-            document.getElementById('home-screen').classList.add('hidden');
-            document.getElementById('admin-screen').classList.add('hidden');
-            document.getElementById('qr-screen').classList.add('hidden');
-            document.getElementById(screenId + '-screen').classList.remove('hidden');
-
-            if (screenId === 'admin') {
-                loadResponses();
-            } else if (screenId === 'qr') {
-                loadQR();
-            }
-        }
-
-        // Gestión del formulario
-        function toggleAddForm() {
-            const form = document.getElementById('add-form');
-            form.classList.toggle('hidden');
-        }
-
-        // Cargar respuestas
-        async function loadResponses() {
-            try {
-                const response = await fetch('/api/responses');
-                const data = await response.json();
-                const container = document.getElementById('responses-list');
-                container.innerHTML = '<div class="list-header">RESPUESTAS EXISTENTES</div>';
-
-                for (const [keyword, resp] of Object.entries(data)) {
-                    if (keyword === 'default') continue;
-                    const item = document.createElement('div');
-                    item.className = 'list-item';
-                    item.innerHTML = `
-                        <div class="list-item-content">
-                            <div class="list-item-title">${keyword}</div>
-                            <div class="list-item-subtitle">${resp}</div>
-                        </div>
-                        <div class="actions">
-                            <button class="action-button" onclick="editResponse('${keyword}')">✎</button>
-                            <button class="action-button delete" onclick="deleteResponse('${keyword}')">🗑</button>
-                        </div>
-                    `;
-                    container.appendChild(item);
-                }
-            } catch (error) {
-                console.error('Error cargando respuestas:', error);
-            }
-        }
-
-        // Guardar respuesta
-        async function saveResponse() {
-            const keyword = document.getElementById('keyword-input').value;
-            const response = document.getElementById('response-input').value;
-
-            if (!keyword || !response) {
-                alert('Por favor completa todos los campos');
-                return;
-            }
-
-            try {
-                const currentResponses = await (await fetch('/api/responses')).json();
-                currentResponses[keyword] = response;
-
-                const saveResponse = await fetch('/api/responses', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(currentResponses)
-                });
-
-                if (saveResponse.ok) {
-                    document.getElementById('keyword-input').value = '';
-                    document.getElementById('response-input').value = '';
-                    toggleAddForm();
-                    loadResponses();
-                }
-            } catch (error) {
-                console.error('Error guardando respuesta:', error);
-            }
-        }
-
-        // Editar respuesta
-        async function editResponse(keyword) {
-            const responses = await (await fetch('/api/responses')).json();
-            document.getElementById('keyword-input').value = keyword;
-            document.getElementById('response-input').value = responses[keyword];
-            document.getElementById('add-form').classList.remove('hidden');
-        }
-
-        // Eliminar respuesta
-        async function deleteResponse(keyword) {
-            if (!confirm('¿Estás seguro de querer eliminar esta respuesta?')) return;
-
-            try {
-                const responses = await (await fetch('/api/responses')).json();
-                delete responses[keyword];
-
-                const response = await fetch('/api/responses', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(responses)
-                });
-
-                if (response.ok) {
-                    loadResponses();
-                }
-            } catch (error) {
-                console.error('Error eliminando respuesta:', error);
-            }
-        }
-     
-        // Cargar QR
-        async function loadQR() {
-            try {
-                const response = await fetch('/qr');
-                const html = await response.text();
-                const container = document.getElementById('qr-container');
-                
-                // Extraer la imagen del QR del HTML
-                const match = html.match(/<img src="([^"]+)"/);
-                if (match) {
-                    const img = document.createElement('img');
-                    img.src = match[1];
-                    img.style.maxWidth = '100%';
-                    img.style.height = 'auto';
-                    container.innerHTML = '';
-                    container.appendChild(img);
-                } else {
-                    container.innerHTML = 'Generando código QR...';
-                }
-            } catch (error) {
-                console.error('Error cargando QR:', error);
-                document.getElementById('qr-container').innerHTML = 'Error al cargar el código QR';
-            }
-        }
-
-        // Inicializar
-        function init() {
-            const hash = window.location.hash.slice(1);
-            if (hash) {
-                showScreen(hash);
-            }
-        }
-
-        // Manejar navegación
-        window.addEventListener('hashchange', () => {
-            const hash = window.location.hash.slice(1);
-            if (hash) {
-                showScreen(hash);
-            } else {
-                showScreen('home');
-            }
-        });
-
-        // Iniciar aplicación
-        init();
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
